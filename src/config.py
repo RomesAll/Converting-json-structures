@@ -19,16 +19,11 @@ class DataBase(ConfigBase):
 
     @property
     @checking_variables_db
-    def test(self):
-        return self.POSTGRES_MODE
-
-    @checking_variables_db
-    @property
     def DATABASE_URL_async(self):
         return f'postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}'
 
-    @checking_variables_db
     @property
+    @checking_variables_db
     def DATABASE_URL_sync(self):
         return f'postgresql+psycopg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}'
 

@@ -2,7 +2,7 @@ fastapi
 uvicorn
 pydantic
 pydantic-settings
-alembic
+alembic==1.12.0
 pytest
 pytest-dotenv
 sqlalchemy
