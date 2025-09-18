@@ -61,12 +61,4 @@ class DefaultCRUDService:
     @staticmethod
     async def service_delete_resumes(id:int):
         res = await DefaultDAO.delete_data_from_db(id, ResumesORM)
-        return res 
-
-asyncio.run(DefaultCRUDService.service_update_workers(
-    WorkerDTO(
-        id=3,
-        first_name='zzz',
-        phone='32423'
-    )
-))
+        return res
