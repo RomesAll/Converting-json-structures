@@ -10,7 +10,7 @@ class DefaultDAO:
     @classmethod
     async def select_all_data_form_db(cls, select_params: SelectParams, pagination_params: PaginationParams):
         async with async_session_factory() as session:
-            query = await cls._query_builder(select_params=select_params, pagination_params=pagination_params)
+            query = await cls.query_builder(select_params=select_params, pagination_params=pagination_params)
             res_query = await session.execute(query)
             orm_objects = res_query.scalars().all()
             return orm_objects
@@ -55,19 +55,36 @@ class DefaultDAO:
     
     @staticmethod
     @checking_type_load
-    async def _query_builder(select_params: SelectParams, pagination_params: PaginationParams):
+    async def query_builder(select_params: SelectParams, pagination_params: PaginationParams = None):
         model_orm = select_params.model_orm
         rel_var = select_params.model_orm_rel_var
         type_load_rel_var = select_params.type_load
-        limit = pagination_params.limit
-        offset = pagination_params.offset
         
         query = select(model_orm)
 
         if rel_var and type_load_rel_var:
             query = query.options(type_load_rel_var(rel_var))
         
-        if limit != None and offset != None:
-            query = query.limit(limit).offset(offset)
+        if pagination_params and pagination_params.limit != None and pagination_params.offset != None:
+            query = query.limit(pagination_params.limit).offset(pagination_params.offset)
         
         return query
+    
+
+class WorkersDAO(DefaultDAO):
+
+    @classmethod
+    async def select_worker_by_id(cls, id: int, select_params: SelectParams):
+        async with async_session_factory() as session:
+            query = await cls.query_builder(id, select_params)
+            res_query = await session.execute(query)
+            orm_objects = res_query.scalars().all()
+            return orm_objects
+    
+    @classmethod
+    async def query_builder(cls, id:int, select_params: SelectParams):
+        query = await super(WorkersDAO, cls).query_builder(select_params)
+        query = query.filter(WorkersORM.id == id)
+        return query
+
+#asyncio.run(WorkersDAO.select_worker_by_id(2, SelectParams(model_orm = WorkersORM)))

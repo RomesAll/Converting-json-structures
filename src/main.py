@@ -7,6 +7,11 @@ app = FastAPI()
 
 PaginationParamsDep = Annotated[PaginationParams, Depends(PaginationParams)]
 
+@app.get('/worker/{id_worker}')
+async def get_workers() -> list[WorkerDTO]:
+    list_dto_model = await DefaultCRUDService.service_select_workers()
+    return list_dto_model
+
 @app.get('/workers')
 async def get_workers(pagination_params: Annotated[PaginationParams, Depends(PaginationParams)]) -> list[WorkerDTO]:
     list_dto_model = await DefaultCRUDService.service_select_workers(pagination_params)

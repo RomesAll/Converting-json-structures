@@ -13,8 +13,6 @@ def checking_type_load(funct):
     def wrapper(*args, **kwargs):
         type_load = None
 
-        a = kwargs
-
         #Если type_load находиться в позиционных аргументах
         for i in range(len(args)):
             current_arg = args[i].__dict__.get('type_load', None)
