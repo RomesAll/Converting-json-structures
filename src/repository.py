@@ -2,18 +2,15 @@ from database import async_session_factory
 from sqlalchemy import select
 from decorators import checking_type_load
 from models import WorkersORM
+from schemas import *
 import asyncio
 
 class DefaultDAO:
 
     @classmethod
-    @checking_type_load
-    async def select_all_data_form_db(cls, model_orm_name, type_load=None, var_relship=None, params:object=None):
+    async def select_all_data_form_db(cls, select_params: SelectParams, pagination_params: PaginationParams):
         async with async_session_factory() as session:
-            if type_load and var_relship:
-                query = select(model_orm_name).options(type_load(var_relship))
-            else:
-                query = select(model_orm_name)
+            query = await cls._query_builder(select_params=select_params, pagination_params=pagination_params)
             res_query = await session.execute(query)
             orm_objects = res_query.scalars().all()
             return orm_objects
@@ -55,6 +52,22 @@ class DefaultDAO:
         for k, v in new_data_attrs_items:
             if k != '_sa_instance_state' and k in old_data_attrs_key and new_data_dict[k] != old_data_dict[k] and new_data_dict[k]:
                 setattr(old_data, k, v)
+    
+    @staticmethod
+    @checking_type_load
+    async def _query_builder(select_params: SelectParams, pagination_params: PaginationParams):
+        model_orm = select_params.model_orm
+        rel_var = select_params.model_orm_rel_var
+        type_load_rel_var = select_params.type_load
+        limit = pagination_params.limit
+        offset = pagination_params.offset
+        
+        query = select(model_orm)
 
-
-#asyncio.run(DefaultDAO.select_all_data_form_db(WorkersORM))
+        if rel_var and type_load_rel_var:
+            query = query.options(type_load_rel_var(rel_var))
+        
+        if limit != None and offset != None:
+            query = query.limit(limit).offset(offset)
+        
+        return query

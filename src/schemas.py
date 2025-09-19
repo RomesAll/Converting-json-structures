@@ -1,10 +1,16 @@
-from pydantic import BaseModel, EmailStr, field_validator, Field, ValidationError
+from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 from datetime import datetime
 from models import Workload
 
-class PaginatorSchema(BaseModel):
-    pass
+class PaginationParams(BaseModel):
+    limit: Optional[int] = Field(None, ge=0, le=100, description='Кол-во выводимых записей')
+    offset: Optional[int] = Field(None, ge=0, description='Смещение')
+
+class SelectParams(BaseModel):
+    model_orm: object
+    model_orm_rel_var: Optional[object] = None
+    type_load: Optional[object] = None
 
 class WorkerAddDTO(BaseModel):
     first_name: str
