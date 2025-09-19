@@ -12,7 +12,6 @@ created_at_base = Annotated[datetime.datetime,
 updated_at_base = Annotated[datetime.datetime, 
                        mapped_column(server_default=text("TIMEZONE('utc', now())"), onupdate=datetime.datetime.utcnow)]
 
-
 class WorkersORM(Base):
     __tablename__ = 'workers'
     id: Mapped[intpk]
@@ -27,26 +26,6 @@ class WorkersORM(Base):
     resumes_parttime: Mapped[list["ResumesORM"]] = relationship(
         back_populates="worker",
         primaryjoin="and_(WorkersORM.id == ResumesORM.worker_id, ResumesORM.workload == 'parttime')")
-
-    def update_attrs(self, new_data):
-
-        if self.first_name != new_data.first_name and new_data.first_name:
-            self.first_name = new_data.first_name
-
-        if self.last_name != new_data.last_name and new_data.last_name:
-            self.last_name = new_data.last_name
-
-        if self.phone != new_data.phone and new_data.phone:
-            self.phone = new_data.phone
-
-        if self.email != new_data.email and new_data.email:
-            self.email = new_data.email
-
-        if self.created_at != new_data.created_at and new_data.created_at:
-            self.created_at = new_data.created_at
-
-        if self.updated_at != new_data.updated_at and new_data.updated_at:
-            self.updated_at = new_data.updated_at
 
 class Workload(Enum):
     fulltime = "fulltime"
