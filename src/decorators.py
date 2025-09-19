@@ -1,4 +1,4 @@
-from sqlalchemy.orm import lazyload
+from sqlalchemy.orm import lazyload, selectinload, joinedload
 from pydantic import ValidationError
 
 def checking_variables_db(funct):
@@ -12,14 +12,13 @@ def checking_variables_db(funct):
 def checking_type_load(funct):
     def wrapper(*args, **kwargs):
         type_load = None
-        if kwargs.get('type_load', None):
-            type_load = kwargs['type_load']
-        
+        for i in range(len(args)):
+            if args[i] in [selectinload, lazyload, joinedload]:
+                type_load = args[i]
+                break
         if not type_load:
-            type_load = args[1]
-        
+            type_load = kwargs.get("type_load", None)
         if type_load == lazyload:
             raise ValueError('В асинхронных методах нельзя использовать ленивую загрузку')
-
         return funct(*args, **kwargs)
     return wrapper

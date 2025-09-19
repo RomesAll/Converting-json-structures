@@ -3,6 +3,9 @@ from typing import Optional
 from datetime import datetime
 from models import Workload
 
+class PaginatorSchema(BaseModel):
+    pass
+
 class WorkerAddDTO(BaseModel):
     first_name: str
     last_name: Optional[str] = None
@@ -33,14 +36,6 @@ class WorkerDTO(WorkerAddDTO):
         )
         return dict
 
-class WorkerRelDTO(WorkerDTO):
-    resumes: list['ResumesDTO']
-
-    def get_attrs(self):
-        dict = super().get_attrs()
-        dict.update({'resumes': self.resumes})
-        return dict
-
 class ResumesAddDTO(BaseModel):
     title: str
     compensation: Optional[int] = None
@@ -59,7 +54,7 @@ class ResumesAddDTO(BaseModel):
         }
 
 class ResumesDTO(ResumesAddDTO):
-    id: int = None
+    id: int
     created_at: datetime = None
     updated_at: datetime = None
 
@@ -80,4 +75,12 @@ class ResumesRelDTO(ResumesDTO):
     def get_attrs(self):
         dict = super().get_attrs()
         dict.update({'worker': self.worker})
+        return dict
+    
+class WorkerRelDTO(WorkerDTO):
+    resumes: list["ResumesDTO"]
+
+    def get_attrs(self):
+        dict = super().get_attrs()
+        dict.update({'resumes': self.resumes})
         return dict

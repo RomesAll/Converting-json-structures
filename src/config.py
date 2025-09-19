@@ -2,6 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
 from decorators import checking_variables_db
 
+
 class ConfigBase(BaseSettings):
     model_config = SettingsConfigDict(env_file="dev.env")
 

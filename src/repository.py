@@ -8,7 +8,7 @@ class DefaultDAO:
 
     @classmethod
     @checking_type_load
-    async def select_all_data_form_db(cls, model_orm_name, type_load=None, var_relship=None):
+    async def select_all_data_form_db(cls, model_orm_name, type_load=None, var_relship=None, params:object=None):
         async with async_session_factory() as session:
             if type_load and var_relship:
                 query = select(model_orm_name).options(type_load(var_relship))
@@ -57,4 +57,4 @@ class DefaultDAO:
                 setattr(old_data, k, v)
 
 
-asyncio.run(DefaultDAO.update_data_from_db(WorkersORM(id=11, first_name='yyy')))
+#asyncio.run(DefaultDAO.select_all_data_form_db(WorkersORM))
