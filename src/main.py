@@ -1,26 +1,14 @@
 from fastapi import FastAPI, Depends
-from service import *
-from schemas import WorkerDTO, WorkerRelDTO, ResumesAddDTO, ResumesDTO, ResumesRelDTO
+from schemas import PaginationParams
+from typing import Annotated
+from routers.workers import router as router_workers
+from routers.resumes import router as router_resumes
 import uvicorn
 
 app = FastAPI()
 
-PaginationParamsDep = Annotated[PaginationParams, Depends(PaginationParams)]
-
-@app.get('/worker/{id_worker}')
-async def get_workers() -> list[WorkerDTO]:
-    list_dto_model = await DefaultCRUDService.service_select_workers()
-    return list_dto_model
-
-@app.get('/workers')
-async def get_workers(pagination_params: Annotated[PaginationParams, Depends(PaginationParams)]) -> list[WorkerDTO]:
-    list_dto_model = await DefaultCRUDService.service_select_workers(pagination_params)
-    return list_dto_model
-
-@app.get('/workers/resumes')
-async def get_workers_and_resumes(pagination_params: PaginationParamsDep) -> list[WorkerRelDTO]:
-    list_dto_model = await DefaultCRUDService.service_select_workers_rel(pagination_params)
-    return list_dto_model
+app.include_router(router=router_workers, prefix='/api/v1/workers', tags=['Сотрудники'])
+app.include_router(router=router_resumes, prefix='/api/v1/resumes', tags=['Резюме'])
 
 if __name__ == '__main__':
     uvicorn.run("main:app", reload=True, host='0.0.0.0', port=8000)

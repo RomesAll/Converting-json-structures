@@ -4,13 +4,15 @@ from datetime import datetime
 from models import Workload
 
 class PaginationParams(BaseModel):
-    limit: Optional[int] = Field(None, ge=0, le=100, description='Кол-во выводимых записей')
-    offset: Optional[int] = Field(None, ge=0, description='Смещение')
+    limit: int = Field(100, ge=0, le=100, description='Кол-во выводимых записей')
+    offset: int = Field(0, ge=0, description='Смещение')
 
-class SelectParams(BaseModel):
+class ParamsForSelectDef(BaseModel):
     model_orm: object
-    model_orm_rel_var: Optional[object] = None
-    type_load: Optional[object] = None
+
+class ParamsForSelect(ParamsForSelectDef):
+    model_orm_rel_var: object
+    type_load: object
 
 class WorkerAddDTO(BaseModel):
     first_name: str
@@ -50,13 +52,10 @@ class ResumesAddDTO(BaseModel):
 
     def get_attrs(self):
         return {
-            'id': self.id,
-            'first_name': self.first_name,
-            'last_name': self.last_name,
-            'phone': self.phone,
-            'email': self.email,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at
+            'title': self.title,
+            'compensation': self.compensation,
+            'workload': self.workload,
+            'worker_id': self.worker_id
         }
 
 class ResumesDTO(ResumesAddDTO):

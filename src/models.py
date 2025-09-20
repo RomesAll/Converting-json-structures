@@ -10,7 +10,7 @@ intpk = Annotated[int, mapped_column(primary_key=True, autoincrement=True)]
 created_at_base = Annotated[datetime.datetime, 
                        mapped_column(server_default=text("TIMEZONE('utc', now())"))]
 updated_at_base = Annotated[datetime.datetime, 
-                       mapped_column(server_default=text("TIMEZONE('utc', now())"), onupdate=datetime.datetime.utcnow)]
+                       mapped_column(server_default=text("TIMEZONE('utc', now())"), onupdate=text("TIMEZONE('utc', now())"))]
 
 class WorkersORM(Base):
     __tablename__ = 'workers'
@@ -23,9 +23,9 @@ class WorkersORM(Base):
     updated_at: Mapped[updated_at_base]
 
     resumes: Mapped[list["ResumesORM"]] = relationship(back_populates="worker")
-    resumes_parttime: Mapped[list["ResumesORM"]] = relationship(
-        back_populates="worker",
-        primaryjoin="and_(WorkersORM.id == ResumesORM.worker_id, ResumesORM.workload == 'parttime')")
+    # resumes_parttime: Mapped[list["ResumesORM"]] = relationship(
+    #     back_populates="worker",
+    #     primaryjoin="and_(WorkersORM.id == ResumesORM.worker_id, ResumesORM.workload == 'parttime')")
 
 class Workload(Enum):
     fulltime = "fulltime"
