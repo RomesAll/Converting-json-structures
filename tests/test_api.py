@@ -14,9 +14,9 @@ async def async_fixture():
     async with async_engine.begin() as connect:
         await connect.run_sync(Base.metadata.drop_all)
         await connect.run_sync(Base.metadata.create_all)
-    yield
-    async with async_engine.begin() as connect:
-        await connect.run_sync(Base.metadata.drop_all)
+    # yield
+    # async with async_engine.begin() as connect:
+    #     await connect.run_sync(Base.metadata.drop_all)
 
 @pytest.fixture(scope='session', autouse=True)
 async def default_data_for_workers():

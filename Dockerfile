@@ -7,3 +7,4 @@ RUN pip install -r requirements.txt
 COPY . .
 EXPOSE 8000
 USER backend_user
+CMD [ "python", "src/main.py" ]
