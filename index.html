@@ -2,28 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.10.2/jsoneditor.css", rel="stylesheet", type="">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.10.2/jsoneditor.css", rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.10.2/jsoneditor.min.js"></script>
 </head>
 <body>
+    <p><button id="reset">Сброс</button>
+    <p><button id="get_workers">Список всех сотрудников и их резюме</button>
+    <p><button id="get_resumes">Список всех резюме и сотрудников</button>
+
+    <div style="display: flex; justify-content: center;">
+        <div id="jsoneditor", style="width: 800px; height: 800px;"></div>
+    </div>
     <script>
         var container = document.getElementById("jsoneditor");
-        var editor = new JSONEditor(container)
+        var editor = new JSONEditor(container);
+        var button_get_workers = document.getElementById("get_workers")
+        var button_get_resumes = document.getElementById("get_resumes")
+        var button_reset = document.getElementById("reset")
+        var uri = "http://localhost:8000/"
 
         async function setJSON(){
-            const resp = await fetch("http://localhost:8000/workers");
-            const data = await resp.json()
-            editor.set(data)
+            const resp = await fetch(uri);
+            const data = await resp.json();
+            editor.set(data);
         }
 
         function getJSON(){
-            var json = editor.get()
-            alert(JSON.stringify(json,null,2))
+            var json = editor.get();
+            alert(JSON.stringify(json, null, 2));
         }
 
-        document.addEventListener('DOMContentLoaded', function(event)){
-            setJSON()
+        button_get_workers.onclick = function(){
+            uri = 'http://localhost:8000/api/v1/workers/resumes';
+            setJSON();
         }
+
+        button_get_resumes.onclick = function(){
+            uri = 'http://localhost:8000/api/v1/resumes/worker';
+            setJSON();
+        }
+
+        button_reset.onclick = function(){
+            uri = 'http://localhost:8000/';
+            setJSON();
+        }
+
+        document.addEventListener('DOMContentLoaded', function(event) {
+            setJSON()
+        });
+
     </script>
 </body>
 </html>
