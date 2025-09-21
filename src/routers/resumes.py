@@ -7,8 +7,8 @@ router = APIRouter()
 
 PaginationParamsDep = Annotated[PaginationParams, Depends(PaginationParams)]
 
-@router.get('/{id_resume}', summary='Получить резюме по id')
-async def get_resume(id_resume: int,) -> ResumesRelDTO:
+@router.get('/detail/{id_resume}', summary='Получить резюме по id')
+async def get_resume(id_resume: int,) -> list[ResumesRelDTO]:
     dto_model = await ResumesCRUDService.service_select_resumes_by_id(id=id_resume)
     return dto_model
 

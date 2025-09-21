@@ -1,5 +1,5 @@
 from database import async_session_factory
-from sqlalchemy import select
+from sqlalchemy import select, text
 from sqlalchemy.orm import selectinload, lazyload
 from decorators import checking_type_load
 from models import WorkersORM, ResumesORM
@@ -27,9 +27,9 @@ class DefaultQueryBuilder:
     @classmethod
     async def default_select_with_params(cls, select_params: ParamsForSelectSchema, pagination_params: PaginationParams):
         query = select(select_params.model_orm)
-        if pagination_params.limit:
+        if pagination_params.limit != None:
             query = query.limit(pagination_params.limit)
-        if pagination_params.offset:
+        if pagination_params.offset != None:
             query = query.offset(pagination_params.offset)
         return query
 

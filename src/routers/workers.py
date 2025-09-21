@@ -7,18 +7,18 @@ router = APIRouter()
 
 PaginationParamsDep = Annotated[PaginationParams, Depends(PaginationParams)]
 
-@router.get('/{id_worker}', summary='Получить сотрудника по id')
-async def get_worker(id_worker: int) -> WorkerRelDTO:
+@router.get('/detail/{id_worker}', summary='Получить сотрудника по id')
+async def get_worker(id_worker: int) -> list[WorkerRelDTO]:
     dto_model = await WorkersCRUDService.service_select_worker_by_id(id=id_worker)
     return dto_model
 
 @router.get('/', summary='Получить всех сотрудников')
-async def get_workers(pagination_params: PaginationParamsDep) -> list[WorkerDTO]:
+async def get_workers(pagination_params: PaginationParamsDep):
     list_dto_model = await WorkersCRUDService.service_select_workers(pagination_params)
     return list_dto_model
 
 @router.get('/resumes', summary='Получить всех сотрудников и резюме этих сотрудников')
-async def get_workers_and_resumes(pagination_params: PaginationParamsDep) -> list[WorkerRelDTO]:
+async def get_workers_and_resumes(pagination_params: PaginationParamsDep):
     list_dto_model = await WorkersCRUDService.service_select_workers_rel(pagination_params)
     return list_dto_model
 

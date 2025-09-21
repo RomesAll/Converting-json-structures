@@ -1,6 +1,4 @@
-from fastapi import FastAPI, Depends
-from schemas import PaginationParams
-from typing import Annotated
+from fastapi import FastAPI
 from routers.workers import router as router_workers
 from routers.resumes import router as router_resumes
 import uvicorn
